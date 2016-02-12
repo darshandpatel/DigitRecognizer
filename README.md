@@ -1,5 +1,5 @@
 # DigitRecognizer
-Fun project : Theano &amp; CNN
+Fun project : Google TensorFlow, SoftMax, SVM and CNN
 
-This repository contains the implementation of Digit Recognizer using Theano (Python Deep Learning Library)
+This repository contains the implementation of Digit Recognizer using Google TensorFlow.
 
