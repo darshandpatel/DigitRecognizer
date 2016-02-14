@@ -26,7 +26,7 @@ class LoadData:
                     line_parts = file_line.split(",")
                     values[int(line_parts[0])] = 1
                     label.append(values)
-                    features.append(np.array(map(float, line_parts[1:])))
+                    features.append(np.array(map(float, line_parts[1:]))/255)
                 count = count + 1
 
         self.train_features, self.train_labels = np.array(features, dtype='float32'), \
@@ -36,14 +36,14 @@ class LoadData:
 
     def get_train_batch(self, batch_size):
 
-        print self.count
+        #print self.count
         if batch_size > self.nbr_of_train_dp:
             return None, None
         elif (self.nbr_of_train_dp - self.count) > batch_size:
             batch_features = self.train_features[self.count:(self.count + batch_size), ]
             batch_labels = self.train_labels[self.count:(self.count + batch_size), ]
             self.count = self.count + batch_size
-	    print(batch_labels[15])
+	    #print(batch_labels[15])
             return batch_features, batch_labels
         else:
             nbr_gap = batch_size - (self.nbr_of_train_dp - self.count)
@@ -64,7 +64,7 @@ class LoadData:
             for file_line in file_pointer:
                 if (count != 0) and ("," in file_line):
                     line_parts = file_line.split(",")
-                    features.append(np.array(map(float, line_parts)))
+                    features.append(np.array(map(float, line_parts))/255)
                 count = count + 1
 
         self.test_features = np.array(features, dtype='float32')
