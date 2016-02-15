@@ -11,6 +11,7 @@ class LoadData:
         self.nbr_of_train_dp = 0
         self.nbr_of_test_dp = 0
         self.count = 0
+        self.test_count = 0
 
     def load_train_data(self, file_path, file_name):
         label = list()
@@ -43,7 +44,7 @@ class LoadData:
             batch_features = self.train_features[self.count:(self.count + batch_size), ]
             batch_labels = self.train_labels[self.count:(self.count + batch_size), ]
             self.count = self.count + batch_size
-	    #print(batch_labels[15])
+	        #print(batch_labels[15])
             return batch_features, batch_labels
         else:
             nbr_gap = batch_size - (self.nbr_of_train_dp - self.count)
@@ -53,6 +54,17 @@ class LoadData:
                                   self.train_labels[0:nbr_gap, ]))
             self.count = 0
             return batch_features, batch_labels
+
+    def get_test_batch(self, batch_size):
+
+        if batch_size > self.nbr_of_test_dp:
+            return None
+        elif (self.nbr_of_test_dp - self.test_count) >= batch_size:
+            batch_features = self.test_features[self.test_count:(self.test_count + batch_size), ]
+            self.test_count = self.test_count + batch_size
+            return batch_features
+        else:
+            return None
 
     def load_test_data(self, file_path, file_name):
 
@@ -68,6 +80,7 @@ class LoadData:
                 count = count + 1
 
         self.test_features = np.array(features, dtype='float32')
+        print(type(self.test_features))
         self.nbr_of_test_dp = self.test_features.shape[0]
         return self.test_features
 
@@ -81,10 +94,18 @@ class LoadData:
 
 if __name__ == "__main__":
     load_data = LoadData()
-    train_set_x, train_set_y = load_data.load_train_data("/home/darshan/Documents/DigitRecognizer/MNIST_data/",
-                                          "train.csv")
-    print train_set_y.shape
-
+    test_set_x = load_data.load_test_data("/home/darshan/Documents/DigitRecognizer/MNIST_data/",
+                                          "test.csv")
+    print(test_set_x.shape)
+    nbr_of_test_batches = 10
+    batch_size = load_data.nbr_of_test_dp / nbr_of_test_batches
+    print('Batch size '+ str(batch_size))
+    sum_data = 0
+    for j in xrange(nbr_of_test_batches):
+        test_batch = load_data.get_test_batch(batch_size)
+        print type(test_batch)
+        sum_data = sum_data + test_batch.shape[0]
+    print sum_data
 
 
 
